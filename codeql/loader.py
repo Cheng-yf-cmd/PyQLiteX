@@ -10,4 +10,5 @@ def load_plugin(file):
 	pluginName = os.path.splitext(file)[0]
 	__import__("plugins."+pluginName, fromlist = [pluginName]).run()
 
-Start()
+# __import__('init').run()
+# Start()

@@ -1,0 +1,4 @@
+name: codeql-started/queries-python
+version: 0.0.0
+dependencies:
+  codeql/python-all: "0.6.0"
