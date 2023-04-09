@@ -57,12 +57,12 @@ class BasicInfoItem:
         __str__(): Returns a string representation of the metadata item, including the key name
             , value, and source.
     """
-    def __init__(self, key_name: str, key_value: Any, key_from: str):
+    def __init__(self, key_name: str, key_value: Any, key_from: str) -> None:
         self.key_name = key_name
         self.key_value = key_value
         self.key_from = key_from
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.key_name} = {self.key_value}, from {self.key_from}"
 
 
