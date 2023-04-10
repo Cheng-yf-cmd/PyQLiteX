@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "CodeQL-based-Python-source-code-scanner"
+name = "PyQLiteX"
 version = "0.1.0"
 description = ""
-authors = ["Tiger1218 <tiger1218@foxmail.com>"]
+authors = ["Tiger1218 <tiger1218@foxmail.com>", ]
 readme = "README.md"
-packages = [{include = "CodeQL-based-Python-source-code-scanner"}]
+packages = [{include = "pyqlitex"}]
 
 [tool.poetry.dependencies]
 python = "^3.7"

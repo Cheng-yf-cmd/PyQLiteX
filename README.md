@@ -1,4 +1,6 @@
-# CodeQL-based-Python-source-code-scanner
+# PyQLiteX: A Powerful and Lightweight Python Code Quality and Security Analysis Tool with CodeQL
+
+PyQLiteX is a powerful and lightweight tool for Python code quality and security analysis based on CodeQL. It allows you to input Python project from GitHub Repo or existed python project distributed on PYPI, and automatically parses the basic infomation of the project and runs the QL file. PyQLiteX also parses the output of CodeQL and displays it in a user-friendly frontend developed by Bootstrap.js.
 
 ## Dependencies
 
