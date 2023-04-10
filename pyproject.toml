@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "CodeQL-based-Python-source-code-scanner"
+version = "0.1.0"
+description = ""
+authors = ["Tiger1218 <tiger1218@foxmail.com>"]
+readme = "README.md"
+packages = [{include = "CodeQL-based-Python-source-code-scanner"}]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+toml = "^0.10.2"
+urllib3 = "^1.26.15"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^6.0.0"
+pytest-mock = "*"
+
+
+[[tool.poetry.source]]
+name = "mirrors"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+default = true
+secondary = false
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

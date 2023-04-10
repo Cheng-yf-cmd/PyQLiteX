@@ -1,3 +1,7 @@
+'''
+Setup the project. Which include:
+* 
+'''
 import codeql.basic_info.main as BasicInfo
 import codeql.loader as Loader
 import codeql.init as Init

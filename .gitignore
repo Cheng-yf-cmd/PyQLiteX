@@ -163,3 +163,4 @@ cython_debug/
 
 codeql-pack.lock.yml
 .cache
+output/
