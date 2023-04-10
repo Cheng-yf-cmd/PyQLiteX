@@ -1,17 +1,23 @@
+'''
+This module is used to loader the plugins.
+'''
 import os
-import subprocess
 from importlib import import_module
 
-def Start(file_list = os.listdir("codeql/plugins/")):
-	for file in file_list:
-		if not file.endswith('.py') or file.startswith('_'):
-			continue
-		load_plugin(file)
+
+def start(file_list=os.listdir("codeql/plugins/")):
+    '''
+    load the plugins you want
+    '''
+    for file in file_list:
+        if not file.endswith('.py') or file.startswith('_'):
+            continue
+        load_plugin(file)
+
 
 def load_plugin(file):
-	pluginName = os.path.splitext(file)[0]
-	# sys.path += PROJECT_ROOT / "codeql" / "plugins/"
-	import_module("codeql.plugins."+pluginName).run()
-
-# __import__('init').run()
-# Start()
+    '''
+    load one plugin
+    '''
+    plugin_name = os.path.splitext(file)[0]
+    import_module("codeql.plugins." + plugin_name).run()
