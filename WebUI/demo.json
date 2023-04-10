@@ -1,0 +1,50 @@
+{
+    "BasicInformation":{
+        "filename":"a.py",
+        "size":"100kb",
+        "pyVersion":"3.10.1",
+        "Imports":[
+            "requests",
+            "math"
+        ]
+    },
+    "Structure":{
+        "FuncList":{
+            "main":"a = 10\nfor i in range(1):\n    print(i)\n......",
+            "js":"......",
+            "cal":"......"
+        },
+        "CallList":{
+            "main":[
+                "js",
+                "cal"
+            ],
+            "js":[
+                "cal"
+            ],
+            "cal":[]
+        }
+    },
+    "BugOverview":{
+        "BugType":"Stack Overflow",
+        "Reason":"Directly take user input as eval's parameter.",
+        "Payload":"shutdown -h 0",
+        "Result":"shutdown",
+        "CallList":{
+            "FuncName":"cal",
+            "Line":233,
+            "Statement":"eval(s)",
+            "Called":{
+                "FuncName":"js",
+                "Line":123,
+                "Statement":"cal(s)",
+                "Called":{
+                    "FuncName":"main",
+                    "Line":12,
+                    "Statement":"js(s)",
+                    "Called":{}
+                }
+            }
+        }
+    }
+}
