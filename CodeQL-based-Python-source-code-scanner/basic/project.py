@@ -36,7 +36,7 @@ class MetadataNotFoundError(Exception):
         __str__(): Returns a string representation of the exception, 
             including the file type and key name.
     """
-    def __init__(self, file_type, key):
+    def __init__(self, file_type: str, key: str) -> None:
         self.file_type = file_type
         self.key = key
 
