@@ -1,5 +1,6 @@
 import os
 import json
+import subprocess
 
 class _init:
     def init(self):
@@ -11,7 +12,7 @@ class _init:
     def start(self):
         self.init()
         # print('codeql database create \"' + self.databasepath + '\" --language=python ' + "--source-root=\"" + self.projectpath + '\" --overwrite')
-        subprocess.run(['codeql database create',
+        subprocess.run(['codeql','database','create',
                        self.databasepath,
                        '--language=python',
                        "--source-root="+self.projectpath,

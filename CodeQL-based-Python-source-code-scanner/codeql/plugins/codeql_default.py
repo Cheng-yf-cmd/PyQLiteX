@@ -2,16 +2,17 @@ import os
 import json
 import subprocess
 from pathlib import Path
+from importlib import import_module
 
-# PROJECT_ROOT = 
+PROJECT_ROOT = Path.cwd()
 PLUGINS_PATH = 'codeql/plugins'
 
 PACK_INTALL = 'codeql pack install'
-QUERY_RUN = 'codeql query run'
+# QUERY_RUN = 'codeql query run'
 
 class codeql_default:
     def init(self): # load QL files
-        self.path = './plugins/QLFile'
+        self.path = './codeql/plugins/QLFile'
         files = os.listdir(self.path)
         self.qlfiles = []
         self.settings = json.loads(open('../settings.json','r').read())
@@ -30,19 +31,19 @@ class codeql_default:
                 qlName = f
                 break
         # print('cd ' + qlpath + ' && ls && codeql pack install')
-        CURRENT_PATH = PROJECT_ROOT / PLUGINS_PATH
-        QL_PATH = CURRENT_PATH / 'QLFile' / fileName / qlName
+        CURRENT_PATH = PROJECT_ROOT / PLUGINS_PATH / 'QLFile' / fileName
+        QL_PATH = CURRENT_PATH / qlName
 
         subprocess.run(PACK_INTALL,cwd = CURRENT_PATH)
         # os.system('cd ' + qlpath + ' && codeql pack install')
-        subprocess.run([QUERY_RUN, QL_PATH, '-d=' + self.settings['DatabasePath']],
-                       stdout = open('../output/sql.txt','w'))
+        subprocess.run(['codeql', 'query', 'run', QL_PATH, '-d=' + self.settings['DatabasePath']],
+                       stdout = open('./output/sql.txt','w'))
         # os.system('codeql query run ' + qlpath + '/' + qlName
         #           + ' -d=\"' + self.settings['DatabasePath']
         #           + '\" > \"../output/sql.txt\"')
         # print('plugins.QLFile.' + fileName +'.parser')
-        parser = __import__('plugins.QLFile.' + fileName +'.parser', fromlist = ['QLFile', fileName, 'parser'])
-        sql = open('../output/sql.txt','r').read()
+        parser = import_module('codeql.plugins.QLFile.' + fileName +'.parser')
+        sql = open('./output/sql.txt','r').read()
         return parser.parse(sql)
 
     def start(self):
