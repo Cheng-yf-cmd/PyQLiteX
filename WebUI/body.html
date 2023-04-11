@@ -1,0 +1,97 @@
+<html>
+<!--完全没有动态和渲染和信息-->
+<head>
+    <meta charset="utf-8">
+    <style>
+        span.click {color:#0ad;}
+    </style><!--能点击的文本-->   <!--不是很懂为什么注释写<style>里,匹配会出错（但跑起来没事）-->
+    <style>
+        th.thetop {font-weight:900;}
+    </style><!--每列元素的类型-->
+    <style>
+        th.thebody {font-weight:500;}
+    </style><!--一条记录-->
+    <style>
+        th.count {font-weight:900;}
+    </style><!--记录条数-->
+</head>
+
+<body>
+    <h1>基本信息</h1>
+    <div><p>
+        <b>查找项目名：</b>xxx<br>
+        <b>作者：</b>XXX,XXX,XXX<br>
+        <b>大小：</b>xMB<br>
+        <b>语言：</b>pyhton3<br>
+        <b>包含文件：</b>
+        <table border="1">
+            <tr>
+                <th></th> <th class="thetop">文件名</th> <th class="thetop">文件大小</th>
+            </tr>
+            <tr style="font-weight: 100;">
+                <th class="count">1</th><th class="thebody">mainpage.py</th> <th class="thebody">1MB</th>
+            </tr><!--一条记录-->
+            <!--...-->
+        </table> <br>
+    </p></div>
+    <!--基本信息就到这里-->
+    <button>分析</button>
+    <h1>代码信息</h1>
+    <div><p>
+        <b>引用库：</b>
+        <table border="1">
+            <tr>
+                <th></th> <th class="thetop">引用库</th>
+            </tr>
+            <tr style="font-weight: 100;">
+                <th class="count">1</th><th class="thebody">xxx</th>
+            </tr><!--一条记录-->
+            <!--...-->
+        </table> <br>
+        <b>函数及调用：</b>
+        <table border="1">
+            <tr>
+                <th></th> <th class="thetop">函数名</th> <th class="thetop">函数调用</th> <th class="thetop">函数调用自</th>
+            </tr>
+            <tr style="font-weight: 100;">
+                <th class="count">1</th><th class="thebody">xxx()</th> <th class="thebody"><span class="click">xto1()</span><br><span class="click">xto2()</span><br></th> <th class="thebody"><span class="click">tox1()</span><br></th></tr> 
+            </tr><!--一条记录-->
+            <!--...-->
+        </table> <br>
+    </p></div>
+    <h1>漏洞</h1>
+    <h1 style="color:lime">我们并没有从项目代码中分析出漏洞</h1>
+    <h1 style="color:yellow">我们认为您的项目代码中存在漏洞</h1>
+    <div><p>
+        漏洞导致后果：XXX<br>
+        调用链：
+        <ol>
+            <li><span class="click">main()</span>
+                <ul>
+                    调用自：system<br>
+                    在函数的第<span class="click">X</span>行调用了下一个函数。
+                    <p>code （<span class="click">代码</span>）</p><!--整行代码-->
+                    <p>code （代码）</p><!--整个函数代码，高亮显示调用行-->
+                </ul>
+            </li>
+            <li><span class="click">xxx()</span>
+                <ul>
+                    调用自：<span class="click">main()</span><br>
+                    在函数的第<span class="click">X</span>行调用了下一个函数。
+                    <p>code （<span class="click">代码</span>）</p>
+                    <p>code （代码）</p>
+                </ul>
+            </li>
+            <li><span class="click">xxx()</span>
+                <ul>
+                    调用自：<span class="click">xxx()</span><br>
+                    引用库XXX的库函数。（or 在第<span class="click">X</span>行存在漏洞）
+                    <p>code （<span class="click">代码</span>）</p>
+                    <p>code （代码）</p>
+                </ul>
+            </li>
+        </ol>
+    </p></div>
+</body>
+
+</html>
