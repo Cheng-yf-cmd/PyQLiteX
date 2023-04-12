@@ -1,6 +1,6 @@
 # PyQLiteX: A Powerful and Lightweight Python Code Quality and Security Analysis Tool with CodeQL
 
-PyQLiteX is a powerful and lightweight tool for Python code quality and security analysis based on CodeQL. It allows you to input Python project from GitHub Repo or existed python project distributed on PYPI, and automatically parses the basic infomation of the project and runs the QL file. PyQLiteX also parses the output of CodeQL and displays it in a user-friendly frontend developed by Bootstrap.js.
+PyQLiteX is a powerful and lightweight tool for Python code quality and security analysis based on CodeQL. It allows you to input Python project from GitHub Repo or existed python project distributed on PYPI, and automatically parses the basic information of the project and runs the QL file. PyQLiteX also parses the output of CodeQL and displays it in a user-friendly frontend developed by Bootstrap.js.
 
 ## Dependencies
 
@@ -32,7 +32,36 @@ pip install -r requirements.txt
 
 ## For dev-engineer
 
+### Control the Project
+
+We use [poetry](https://python-poetry.org/) to control the whole project. For developing the backend, you need to git clone this repo and cd to its dir, and do following thing:
+
+```bash
+poetry install --with dev --sync
+poetry shell
+# and for some need you want to run some file...
+poetry run [filename]
+# for more information see the doc.
+```
+
+### Python Unit Test
+
+We use [pytest](https://docs.pytest.org/en/7.3.x/) to do the testing work. 
+
+For easiest use, we can just type `pytest` and let it run auto for us.
+
+```bash
+pytest
+```
+You'd better write the test unit.
+
 ### Git & GitHub
+
+For git, there's a half official guide called [Progit](https://www.progit.cn/). And see [GitHub Official Guide](https://docs.github.com/zh/get-started) for a deeper understand of GitHub.
+
+### Python Code Style
+
+See [My Note About PEP-8] and install the [pylint] package.
 
 ```
 .
