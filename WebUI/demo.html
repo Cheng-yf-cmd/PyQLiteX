@@ -9,57 +9,91 @@
 
   <style>
     header {
-      background-color: yellow;
-      color: black;
+      background-color: rgb(67, 142, 185);
+      color: white;
       text-align: center;
-      padding: 20px;
-      font-size:xx-large
-    }
+      padding: 10px;
+      font-size: x-large;
 
-    nav {
-      line-height: 30px;
-      background-color: yellowgreen;
-      width: 100px;
-      float: left;
-      padding: 20px;
-    }
-
-    section {
-      float: left;
-      padding: 50px;
     }
 
     footer {
-      background-color: yellow;
-      color: black;
+      background-color: rgb(67, 142, 185);
+      color: white;
       clear: both;
       text-align: center;
-      padding: 5px;
+      padding: 10px;
+      font-size: large;
     }
   </style>
 
   <link rel="stylesheet" href="dist\css\bootstrap.min.css">
+  <script src="dist\js\bootstrap.min.js"></script>
+  <script src="dist\js\jquery.min.js"></script>
 </head>
 
 <body>
-
-  <header>PSCS</header>
-
-  <nav class="nav flex-column nav-pills">
-    <a class="nav-link active" aria-current="page" href="#">Active</a>
-    <a class="nav-link" href="#">Link</a>
-    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-  </nav>
-
-  <section>
-    ABCD
-  </section>
+  <header>
+    PyQLiteX
+  </header>
+  <div class="container-fluid mt-4">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                aria-expanded="true" aria-controls="collapseOne">
+                Collapsible Group Item #1
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                #1
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Collapsible Group Item #2
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                #2
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Collapsible Group Item #3
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                #3
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <h1>body</h1>
+        <p>......</p>
+      </div>
+    </div>
+  </div>
 
   <footer>
     the footer
   </footer>
-
-  <script src="dist\js\bootstrap.min.js"></script>
 </body>
 
 </html>
