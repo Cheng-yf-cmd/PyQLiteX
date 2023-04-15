@@ -1,7 +1,5 @@
 {
     "BasicInformation":{
-        "filename":"a.py",
-        "size":"100kb",
         "pyVersion":"3.10.1",
         "Imports":[
             "requests",
