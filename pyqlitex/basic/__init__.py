@@ -5,7 +5,7 @@ __all__ = ["PythonProject", "MetadataNotFoundError"]
 from .exception import MetadataNotFoundError
 from .project import PythonProject
 
-def basic_info(work_dir = None):
+def basicinfo_wrapper(work_dir = None):
     python_project = PythonProject(work_dir=work_dir)
     python_project.analyze_dir()
     python_project.dump_data()

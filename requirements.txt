@@ -1,2 +1,5 @@
 urllib3~=1.26.15
 toml~=0.10.2
+fastentrypoints~=0.12
+python-dotenv~=0.9
+humanize~=4.6.0

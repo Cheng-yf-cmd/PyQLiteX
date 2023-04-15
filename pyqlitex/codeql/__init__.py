@@ -1,7 +1,7 @@
 '''
     __init__ of the codeql dir
 '''
-__all__ = ["InitCodeQL", "CodeQLLoader", "code_wrapper"]
+__all__ = ["InitCodeQL", "CodeQLLoader", "codeql_wrapper"]
 import os
 
 from dotenv import load_dotenv
@@ -12,7 +12,7 @@ from .loader import CodeQLLoader
 load_dotenv()
 PROJECT_ROOT = os.getenv("PROJECT_ROOT")
 
-def code_wrapper(**kwargs) -> None:
+def codeql_wrapper(**kwargs) -> None:
     '''
         Wrapper of CodeQL module
     '''
