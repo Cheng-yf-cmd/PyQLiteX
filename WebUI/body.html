@@ -1,0 +1,157 @@
+<html>
+<!--完全没有动态和渲染和信息-->
+<head>
+    <meta charset="utf-8">
+    <script src="dist\js\bootstrap.min.js"></script>
+    <script src="JQuery.js"></script>
+    <link rel="stylesheet" type="text/css" href="dist\css\bootstrap.css">
+    <style>
+        a.showcode {
+            color:#00f;
+            text-decoration:none;
+        }/*显示和隐藏代码*/
+
+        a.click {
+            color:#0ad;
+        }/*能点击的文本*/
+
+        p.normaltext{
+            font-size:15;
+        }/*普通的文本*/
+
+        span.highlightcode
+        {
+            background-color:red;
+            color:white;
+        }
+    </style>
+    <script>
+        window
+        var data;
+        data=JSON.parse('{"BasicInformation":{"Name":"a.py","Writer":["someoneA","someoneB","someoneC"],"Size":"100kb","pyVersion":"3.10.1","File":[{"Name":"xxx1.py","Size":"100kb"},{"Name":"xxx2.py","Size":"100kb"}]},"Structure":{"Imports":["requests","math"],"Function":[{"Name":"main()","Call":["cal(s)","js(s)"],"Callfrom":[]},{"Name":"js()","Call":["cal(s)"],"Callfrom":["main()"]},{"Name":"cal()","Call":[],"Callfrom":["main()","js()"]}]},"BugOverview":{"BugType":"StackOverflow","Reason":"Directlytakeuserinputaseval\'sparameter.","Payload":"shutdown-h0","Result":"shutdown","CallList":[{"FuncName":"cal","Line":123,"Statement":"eval(s)","Called":"js","Linecode":"...eval(s)...","Funccode":null},{"FuncName":"js","Line":3,"Statement":"cal(s)","Called":"main","Linecode":"...cal(s)...","Funccode":["...","...","...cal(s)...","..."]},{"FuncName":"main","Line":1,"Statement":"js(s)","Called":null,"Linecode":"...js(s)...","Funccode":["...js(s)..."]}]}}');
+    //临时使用数据
+    $.getJSON("demo.json",function(d)
+        {
+            data=d;
+        });//暂时跑不了
+    </script>
+</head>
+
+<body>
+    <h1>基本信息</h1>
+    <div><p class="normaltext">
+        <b>项目名：</b><script>document.write(data.BasicInformation.Name);</script><br>
+        <b>作者：</b><script>for(i=0;i<data.BasicInformation.Writer.length;i++){if(i!=0)document.write(",");document.write(data.BasicInformation.Writer[i]);}</script><br>
+        <b>总大小：</b><script>document.write(data.BasicInformation.Size);</script><br>
+        <b>语言版本：</b><script>document.write(data.BasicInformation.pyVersion);</script><br>
+        <b>包含文件：</b>
+        <table class="table table-striped">
+            <tr>
+                <th></th> <th scope="col">文件名</th> <th scope="col">文件大小</th>
+            </tr>
+            <script>
+                for(i=0;i<data.BasicInformation.File.length;i++)
+                {
+                    document.write('<tr style="font-weight: 100;">');
+                        document.write("<th>"+(i+1)+"</th>");document.write("<td>"+data.BasicInformation.File[i].Name+"</td>");document.write("<td>"+data.BasicInformation.File[i].Size+"</td>");
+                    document.write("</tr>");
+                }
+            </script>
+        </table> <br>
+    </p></div>
+    <!--基本信息就到这里-->
+    <h1>代码信息</h1>
+    <div><p class="normaltext">
+        <b>引用库：</b>
+        <table class="table table-striped">
+            <tr>
+                <th></th> <th scope="col">引用库</th>
+            </tr>
+            <script>
+                for(i=0;i<data.Structure.Imports.length;i++)
+                {
+                    document.write('<tr style="font-weight: 100;">');
+                        document.write("<th>"+(i+1)+"</th>");document.write("<td>"+data.Structure.Imports[i]+"</td>");
+                    document.write("</tr>");
+                }
+            </script>
+        </table> <br>
+        <b>函数及调用：</b>
+        <table class="table table-striped">
+            <tr>
+                <th></th> <th scope="col">函数名</th> <th scope="col">函数调用</th> <th scope="col">函数可能调用自</th>
+            </tr>
+            <script>
+                for(i=0;i<data.Structure.Function.length;i++)
+                {
+                    document.write('<tr style="font-weight: 100;">');
+                    document.write("<th>"+(i+1)+"</th>");
+                        document.write("<td>"+data.Structure.Function[i].Name+"</td>");
+                        document.write("<td>");
+                        if(data.Structure.Function[i].Call.length==0)
+                            document.write("<hr>");
+                        else for(j=0;j<data.Structure.Function[i].Call.length;j++)
+                            document.write(data.Structure.Function[i].Call[j]+"<br>");
+                        document.write("</td>");
+                        document.write("<td>");
+                        if(data.Structure.Function[i].Callfrom.length==0)
+                            document.write("<hr>");
+                        else for(j=0;j<data.Structure.Function[i].Callfrom.length;j++)
+                            document.write(data.Structure.Function[i].Callfrom[j]+"<br>");
+                        document.write("</td>");
+                    document.write("</tr>");
+                }
+            </script>
+        </table> <br>
+    </p></div>
+    <h1>漏洞</h1>
+<!--    <h1 style="color:lime">我们并没有从项目代码中分析出漏洞</h1>
+    <h1 style="color:yellow">我们认为您的项目代码中存在漏洞</h1>    -->
+    <div><p class="normaltext">
+        <b>漏洞类型：</b><script>document.write(data.BugOverview.BugType);</script><br>
+        <b>漏洞原因：</b><script>document.write(data.BugOverview.Reason);</script><br>
+        <b>漏洞将执行：</b><script>document.write(data.BugOverview.Payload);</script><br>
+        <b>漏洞导致后果：</b><script>document.write(data.BugOverview.Result);</script><br>
+        <b>调用链：</b>
+        <ol>
+            <script>
+                for(i=0;i<data.BugOverview.CallList.length;i++)
+                {
+                    document.write("<li>");
+                    document.write("<a>"+data.BugOverview.CallList[i].FuncName+"</a>");
+                        document.write("<ul>");
+                        if(data.BugOverview.CallList[i].Called!=null)
+                            document.write("调用自："+data.BugOverview.CallList[i].Called+"<br>");
+                        else
+                            document.write("调用自：system<br>");
+                        document.write('在函数的<a class="showcode" data-bs-toggle="collapse" href="#showline'+i+'" aria-expanded="false" aria-controls="showline'+i+'">第'+data.BugOverview.CallList[i].Line+'行</a>调用了下一个函数。');
+                        document.write('<div class="collapse" id="showline'+i+'">');
+                        document.write("<p>");
+                            document.write(data.BugOverview.CallList[i].Linecode+"<br>");
+                            document.write('<a class="showcode" data-bs-toggle="collapse" href="#showfunction'+i+'" aria-expanded="false" aria-controls="showfunction'+i+'">展示函数代码</a>');
+                        document.write("</p>");
+                        document.write('<div class="collapse" id="showfunction'+i+'">');
+                            if(data.BugOverview.CallList[i].Funccode!=null)
+                            {
+                                for(j=0;j<data.BugOverview.CallList[i].Funccode.length;j++)
+                                {
+                                    if(j+1!=data.BugOverview.CallList[i].Line)
+                                    document.write(data.BugOverview.CallList[i].Funccode[j]+"<br>");
+                                    else
+                                    document.write('<span class="highlightcode">'+data.BugOverview.CallList[i].Funccode[j]+"</span><br>");
+                                }
+                            }
+                            else
+                            {
+                                document.write('<span style="color:red">太长了！</span>');
+                            }
+                            document.write("</div>");
+                        document.write("</ul>");
+                    document.write("</li>");
+                }
+            </script>
+        </ol>
+    </p></div>
+</body>
+
+</html>
