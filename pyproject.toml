@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PyQLiteX"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Tiger1218 <tiger1218@foxmail.com>", ]
 readme = "README.md"
