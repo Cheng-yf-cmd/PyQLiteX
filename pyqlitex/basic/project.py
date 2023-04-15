@@ -6,43 +6,26 @@ or from the PyPI package repository,
 analyzing the project's metadata files (setup.cfg and pyproject.toml), 
 and outputting information about the project.
 '''
-import subprocess
-import os
-from pathlib import Path
 import configparser
-import logging
 import json
-from typing import Dict, Any
+import logging
+# import os
+# import subprocess
+import sys
+from pathlib import Path
+from typing import Any, Dict
 
-import urllib3
+import setuptools
 import toml
+import urllib3
 
-PROJECT_ROOT = "/home/tiger1218/dachuang/CodeQL-based-Python-source-code-scanner"
+from .exception import MetadataNotFoundError
+
+PROJECT_ROOT = "/home/tiger1218/dachuang/PyQLiteX/pyqlitex"
 OUTPUT_DIR = "output"
 PYPI_MIRROR = "https://pypi.org/project/"
 
 GIT_CLONE = "git clone"
-
-
-class MetadataNotFoundError(Exception):
-    """
-    An exception that is raised when a metadata file does not contain a specified key.
-
-    Attributes:
-        file_type (str): The type of metadata file (e.g. "setup.cfg", "pyproject.toml").
-        key (str): The name of the missing key.
-
-    Methods:
-        __str__(): Returns a string representation of the exception, 
-            including the file type and key name.
-    """
-    def __init__(self, file_type: str, key: str) -> None:
-        self.file_type = file_type
-        self.key = key
-
-    def __str__(self):
-        return f"In file {self.file_type} found not key {self.key}"
-
 
 class BasicInfoItem:
     """
@@ -57,6 +40,7 @@ class BasicInfoItem:
         __str__(): Returns a string representation of the metadata item, including the key name
             , value, and source.
     """
+
     def __init__(self, key_name: str, key_value: Any, key_from: str) -> None:
         self.key_name = key_name
         self.key_value = key_value
@@ -89,50 +73,52 @@ class PythonProject:
         self.project_name: str
         self.cfg_path: Path | None
         self.pyproject_toml_path: Path | None
+        self.setup_py_path: Path | None
         self.workdir: Path
         self.key: Dict[str, BasicInfoItem] = {}
+        logging.basicConfig(level=logging.ERROR)
 
-    def load_from_git(self, repo_addr: str) -> None:
-        '''
-        Load a project from a git repository.
+    # def load_from_git(self, repo_addr: str) -> None:
+    #     '''
+    #     Load a project from a git repository.
 
-        Args:
-            repo_addr (str): The address of the git repository.
+    #     Args:
+    #         repo_addr (str): The address of the git repository.
 
-        Returns:
-            None
-        '''
-        self.load_method = "git"
-        self.remote_repo = repo_addr
-        self.project_name = self._parse_remote_repo(repo_addr)
+    #     Returns:
+    #         None
+    #     '''
+    #     self.load_method = "git"
+    #     self.remote_repo = repo_addr
+    #     self.project_name = self._parse_remote_repo(repo_addr)
 
-        subprocess.run([GIT_CLONE, repo_addr],
-                       shell=True,
-                       cwd=Path(PROJECT_ROOT) / OUTPUT_DIR,
-                       check=False
-                       )
+    #     subprocess.run([GIT_CLONE, repo_addr],
+    #                    shell=True,
+    #                    cwd=Path(PROJECT_ROOT) / OUTPUT_DIR,
+    #                    check=False
+    #                    )
 
-        self.workdir = Path(PROJECT_ROOT) / OUTPUT_DIR / self.project_name
+    #     self.workdir = Path(PROJECT_ROOT) / OUTPUT_DIR / self.project_name
 
-    def load_from_pypi(self, pypi_name: str) -> None:
-        '''
-        Load a project from PyPI.
+    # def load_from_pypi(self, pypi_name: str) -> None:
+    #     '''
+    #     Load a project from PyPI.
 
-        Args:
-            pypi_name (str): The name of the package on PyPI.
+    #     Args:
+    #         pypi_name (str): The name of the package on PyPI.
 
-        Returns:
-            None
-        '''
-        # TODO: Not finish yet.
-        # ! Need to implement a lot of things. eg. installation steps by pip.
-        self.load_method = "pypi"
-        self.remote_repo = PYPI_MIRROR
-        self.project_name = pypi_name
+    #     Returns:
+    #         None
+    #     '''
+    #     # TODO: Not finish yet.
+    #     # ! Need to implement a lot of things. eg. installation steps by pip.
+    #     self.load_method = "pypi"
+    #     self.remote_repo = PYPI_MIRROR
+    #     self.project_name = pypi_name
 
-        os.chdir(self.project_name)
+    #     os.chdir(self.project_name)
 
-        self.workdir = Path(PROJECT_ROOT) / OUTPUT_DIR / self.project_name
+    #     self.workdir = Path(PROJECT_ROOT) / OUTPUT_DIR / self.project_name
 
     def analyze_dir(self) -> None:
         '''
@@ -146,22 +132,31 @@ class PythonProject:
         '''
         flag = 0
         if (self.workdir / "setup.cfg").exists():
-            flag = 1
+            flag += 1
             self.cfg_path = self.workdir / "setup.cfg"
             try:
                 self._parse_setup_cfg()
             except MetadataNotFoundError as metadata_error:
                 logging.error(metadata_error.__str__)
-                flag = 0
+                flag -= 1
 
-        if(self.workdir / "pyproject.toml").exists():
-            flag = 1
+        if (self.workdir / "pyproject.toml").exists():
+            flag += 1
             self.pyproject_toml_path = self.workdir / "pyproject.toml"
             try:
                 self._parse_pyproject_toml()
             except MetadataNotFoundError as metadata_error:
                 logging.error(metadata_error.__str__)
-                flag = 0
+                flag -= 1
+
+        if (self.workdir / "setup.py").exists():
+            flag += 1
+            self.setup_py_path = self.workdir / "setup.py"
+            try:
+                self._parse_setup_py()
+            except MetadataNotFoundError as metadata_error:
+                logging.error(metadata_error.__str__)
+                flag -= 1
 
         if not flag:
             raise FileNotFoundError(
@@ -178,23 +173,26 @@ class PythonProject:
             None
         '''
         cfg_path = self.cfg_path
-        rets = []
         metadata_list = ["name", "author", "description", "license"]
         config = configparser.ConfigParser()
         config.read(cfg_path)
         if "metadata" not in config:
             raise MetadataNotFoundError("setup.cfg", "metadata")
+        # raise NameError
         for metadata in metadata_list:
             if not metadata in config['metadata']:
                 raise MetadataNotFoundError("setup.cfg", metadata)
             metadata_key_name = self._mapping(metadata)
+            # print(config['metadata'][metadata])
             basicinfoitem = BasicInfoItem(metadata_key_name,
-                                              config['metadata'][metadata],
-                                              "setup.cfg"
-                                              )
-            self.key[metadata_key_name] = [] if self._mapping(metadata) not in self.key \
-                        else self.key[metadata_key_name] + basicinfoitem
-        return rets
+                                          config['metadata'][metadata],
+                                          "setup.cfg"
+                                          )
+            # print(basicinfoitem.__str__())
+            logging.info("Parsed %s", basicinfoitem)
+            self.key[metadata_key_name] = [basicinfoitem] \
+                if self._mapping(metadata) not in self.key \
+                else self.key[metadata_key_name] + basicinfoitem
 
     def _parse_pyproject_toml(self) -> None:
         '''
@@ -206,8 +204,22 @@ class PythonProject:
         Returns:
             None
         '''
-        rets = []
         toml_config = toml.load(self.pyproject_toml_path)
+
+        if "project" in toml_config:
+            metadata_list = ["name", "authors", "description", "license"]
+            for metadata in metadata_list:
+                if not metadata in toml_config['project']:
+                    raise MetadataNotFoundError("pyproject.toml", metadata)
+                metadata_key_name = self._mapping(metadata)
+                basicinfoitem = BasicInfoItem(metadata_key_name,
+                                              toml_config['project'][metadata],
+                                              "pyproject"
+                                              )
+                logging.info("Parsed %s", basicinfoitem)
+                self.key[metadata_key_name] = [basicinfoitem] if metadata_key_name not in self.key \
+                    else self.key[metadata_key_name] + basicinfoitem
+        # ! Need to be decoupled
         if "tool" in toml_config and "poetry" in toml_config["tool"]:
             # Parse package that use poetry to control project
             metadata_list = ["name", "authors", "description", "license"]
@@ -221,8 +233,41 @@ class PythonProject:
                                               )
                 logging.info("Parsed %s", basicinfoitem)
                 self.key[metadata_key_name] = [basicinfoitem] if metadata_key_name not in self.key \
-                        else self.key[metadata_key_name] + basicinfoitem
-        return rets
+                    else self.key[metadata_key_name] + basicinfoitem
+
+    def _parse_setup_py(self) -> None:
+        '''
+            Parse the setup.py by monkey patching the setup function.
+        '''
+        setup_args = None
+
+        def patched_setup(**kwargs):
+            setup_args = kwargs
+
+        old_setuptools_setup = setuptools.setup
+        setuptools.setup = patched_setup
+
+        sys.path = sys.path + [str(self.workdir)]
+
+        exec(self.setup_py_path.read_text(), {
+                "__name__": "__main__",
+                "__builtins__": __builtins__,
+                "__file__": self.setup_py_path.resolve()})
+        setuptools.setup = old_setuptools_setup
+        sys.path.pop()
+        metadata_list = ["name", "author", "description", "license"]
+        for metadata in metadata_list:
+            if not metadata in setup_args:
+                raise MetadataNotFoundError("setup.py", metadata)
+            metadata_key_name = self._mapping(metadata)
+            basicinfoitem = BasicInfoItem(metadata_key_name,
+                                            setup_args[metadata],
+                                            "setup.py"
+                                            )
+            logging.info("Parsed %s", basicinfoitem)
+            self.key[metadata_key_name] = [basicinfoitem] if metadata_key_name not in self.key \
+                else self.key[metadata_key_name] + basicinfoitem
+
 
     def _debug_output(self) -> None:
         '''
@@ -236,7 +281,7 @@ class PythonProject:
             if callable(key):
                 print('\n')
                 continue
-            print(f" ,value is {dir(self)[key]}")
+            print(f" ,value is {getattr(self, key)}")
 
     def dump_data(self) -> bool:
         '''
@@ -246,7 +291,7 @@ class PythonProject:
             bool: True if the data was successfully dumped, False otherwise.
         '''
         json_data = json.dumps(self.key,
-                               default=lambda o:o. __dict__,
+                               default=lambda o: o. __dict__,
                                sort_keys=True,
                                indent=4)
         print(json_data)

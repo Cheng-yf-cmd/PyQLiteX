@@ -97,3 +97,14 @@ See [My Note About PEP-8] and install the [pylint] package.
 * Remember to write the type-hint and docstring. 
 * No tester nor project controller yet. 
 * Post an issue and AT(@) if you have problem involve someone else.
+
+## Next step for our Project
+
+### Create a benchmark
+
+### Other software
+
+* [Pyre](https://github.com/facebook/pyre-check)
+* [bandit](https://github.com/PyCQA/bandit)
+* [safety](https://github.com/pyupio/safety)
+
