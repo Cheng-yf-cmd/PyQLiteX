@@ -6,6 +6,8 @@ or from the PyPI package repository,
 analyzing the project's metadata files (setup.cfg and pyproject.toml), 
 and outputting information about the project.
 '''
+import os
+import subprocess
 import configparser
 import json
 import logging
@@ -18,11 +20,15 @@ from typing import Any, Dict
 import setuptools
 import toml
 import urllib3
+from dotenv import load_dotenv
+from humanize import naturalsize
 
 from .exception import MetadataNotFoundError
 
-PROJECT_ROOT = "/home/tiger1218/dachuang/PyQLiteX/pyqlitex"
-OUTPUT_DIR = "output"
+load_dotenv()
+PROJECT_ROOT = os.getenv("PROJECT_ROOT")# "/home/tiger1218/dachuang/PyQLiteX/pyqlitex"
+OUTPUT_DIR = os.getenv("OUTPUT_DIR") # output
+OUTPUT_JSON_NAME = os.getenv("OUTPUT_JSON_NAME") # demo.json
 PYPI_MIRROR = "https://pypi.org/project/"
 
 GIT_CLONE = "git clone"
@@ -67,58 +73,58 @@ class PythonProject:
                 A dictionary containing the basic information items of the project.
     '''
 
-    def __init__(self):
+    def __init__(self, work_dir: str | None = None):
         self.load_method: str
         self.remote_repo: str | None
         self.project_name: str
         self.cfg_path: Path | None
         self.pyproject_toml_path: Path | None
         self.setup_py_path: Path | None
-        self.workdir: Path
+        self.workdir: Path | None = None if not work_dir else Path(work_dir)
         self.key: Dict[str, BasicInfoItem] = {}
         logging.basicConfig(level=logging.ERROR)
 
-    # def load_from_git(self, repo_addr: str) -> None:
-    #     '''
-    #     Load a project from a git repository.
+    def load_from_git(self, repo_addr: str) -> None:
+        '''
+        Load a project from a git repository.
 
-    #     Args:
-    #         repo_addr (str): The address of the git repository.
+        Args:
+            repo_addr (str): The address of the git repository.
 
-    #     Returns:
-    #         None
-    #     '''
-    #     self.load_method = "git"
-    #     self.remote_repo = repo_addr
-    #     self.project_name = self._parse_remote_repo(repo_addr)
+        Returns:
+            None
+        '''
+        self.load_method = "git"
+        self.remote_repo = repo_addr
+        self.project_name = self._parse_remote_repo(repo_addr)
 
-    #     subprocess.run([GIT_CLONE, repo_addr],
-    #                    shell=True,
-    #                    cwd=Path(PROJECT_ROOT) / OUTPUT_DIR,
-    #                    check=False
-    #                    )
+        subprocess.run([GIT_CLONE, repo_addr],
+                       shell=True,
+                       cwd=Path(PROJECT_ROOT) / OUTPUT_DIR,
+                       check=False
+                       )
 
-    #     self.workdir = Path(PROJECT_ROOT) / OUTPUT_DIR / self.project_name
+        self.workdir = Path(PROJECT_ROOT) / OUTPUT_DIR / self.project_name
 
-    # def load_from_pypi(self, pypi_name: str) -> None:
-    #     '''
-    #     Load a project from PyPI.
+    def load_from_pypi(self, pypi_name: str) -> None:
+        '''
+        Load a project from PyPI.
 
-    #     Args:
-    #         pypi_name (str): The name of the package on PyPI.
+        Args:
+            pypi_name (str): The name of the package on PyPI.
 
-    #     Returns:
-    #         None
-    #     '''
-    #     # TODO: Not finish yet.
-    #     # ! Need to implement a lot of things. eg. installation steps by pip.
-    #     self.load_method = "pypi"
-    #     self.remote_repo = PYPI_MIRROR
-    #     self.project_name = pypi_name
+        Returns:
+            None
+        '''
+        # TODO: Not finish yet.
+        # ! Need to implement a lot of things. eg. installation steps by pip.
+        self.load_method = "pypi"
+        self.remote_repo = PYPI_MIRROR
+        self.project_name = pypi_name
 
-    #     os.chdir(self.project_name)
+        os.chdir(self.project_name)
 
-    #     self.workdir = Path(PROJECT_ROOT) / OUTPUT_DIR / self.project_name
+        self.workdir = Path(PROJECT_ROOT) / OUTPUT_DIR / self.project_name
 
     def analyze_dir(self) -> None:
         '''
@@ -283,18 +289,32 @@ class PythonProject:
                 continue
             print(f" ,value is {getattr(self, key)}")
 
-    def dump_data(self) -> bool:
+    def dump_data(self, dump_file: None = None) -> int: # TO-DO: return a boolean number
         '''
         Dump the metadata of the project in JSON format.
 
         Returns:
-            bool: True if the data was successfully dumped, False otherwise.
+            int: True if the data was successfully dumped, False otherwise.
         '''
         json_data = json.dumps(self.key,
                                default=lambda o: o. __dict__,
                                sort_keys=True,
                                indent=4)
-        print(json_data)
+        try:
+            (self.workdir / OUTPUT_DIR).mkdir()
+        except FileExistsError:
+            pass
+        dump_file = dump_file or str(self.workdir / OUTPUT_DIR / "demo.json")
+        with open(dump_file, "w+", encoding="utf-8") as f:
+            return f.write(json_data)
+
+    def get_size(self) -> str:
+        '''
+        Return the size of the working dir
+        '''
+        dir_size = sum(f.stat().st_size for f in self.workdir.glob('**/*') if f.is_file())
+
+        return naturalsize(dir_size, binary=True)
 
     @staticmethod
     def _parse_remote_repo(repo_addr: str) -> str:
