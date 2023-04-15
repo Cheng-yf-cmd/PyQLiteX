@@ -2,10 +2,9 @@
 Setup the project. Which include:
 * 
 '''
-from pathlib import Path
-import codeql.basic_info.main as BasicInfo
-import codeql.loader as Loader
-import codeql.init as Init
+# import pyqlitex.codeql.basic
+import pyqlitex.codeql.init as Init
+import pyqlitex.codeql.loader as Loader
 
 
 def analyze():

@@ -1,11 +1,11 @@
 '''
 This module is used to query the goal with the QLFiles and database.
 '''
-import os
 import json
+import os
 import subprocess
-from pathlib import Path
 from importlib import import_module
+from pathlib import Path
 
 PROJECT_ROOT = Path.cwd()
 PLUGINS_PATH = 'codeql/plugins'
