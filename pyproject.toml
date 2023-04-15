@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PyQLiteX"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Tiger1218 <tiger1218@foxmail.com>", ]
 readme = "README.md"
@@ -10,7 +10,9 @@ packages = [{include = "pyqlitex"}]
 python = "^3.7"
 toml = "^0.10.2"
 urllib3 = "^1.26.15"
-fastentrypoints = "=0.12"
+fastentrypoints = "^0.12"
+python-dotenv = "~=0.9"
+humanize = "^4.6.0"
 
 [tool.poetry.group.dev]
 optional = true
