@@ -10,6 +10,7 @@ packages = [{include = "pyqlitex"}]
 python = "^3.7"
 toml = "^0.10.2"
 urllib3 = "^1.26.15"
+fastentrypoints = "=0.12"
 
 [tool.poetry.group.dev]
 optional = true
