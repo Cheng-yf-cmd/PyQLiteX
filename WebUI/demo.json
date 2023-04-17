@@ -1,72 +1,106 @@
 {
-    "BasicInformation":{
-        "Name":"a.py",
-        "Writer":[
-            "someoneA",
-            "someoneB",
-            "someoneC"
-        ],
-        "Size":"100kb",
-        "pyVersion":"3.10.1",
-        "File":[
-            {"Name":"xxx1.py",
-            "Size":"100kb"
-            },
-            {"Name":"xxx2.py",
-            "Size":"100kb"
-            }
-        ]
-    },
-    "Structure":{
-        "Imports":[
+    "BasicInformation": {
+        "Name": "PyQLiteX",
+        "Size": "100kb",
+        "pyVersion": "3.10.1",
+        "Imports": [
             "requests",
             "math"
         ],
-        "Function":[
+        "TotalFiles": 3,
+        "TotalpyFiles": 2,
+        "CodeOutsideFuncions":"main()",
+        "pyFile": [
             {
-                "Name":"main()",
-                "Call":["cal(s)","js(s)"],
-                "Callfrom":[]
-            },{
-                "Name":"js()",
-                "Call":["cal(s)"],
-                "Callfrom":["main()"]
-            },{
-                
-                "Name":"cal()",
-                "Call":[],
-                "Callfrom":["main()","js()"]
+                "Name": "xxx1.py",
+                "Size": "100kb",
+                "Functions": [
+                    {
+                        "name":"main",
+                        "path":"../Temp/Function/xxx1_main"
+                    },
+                    {
+                        "name":"test",
+                        "path":"../Temp/Function/xxx2_test"
+                    }
+                ]
+            },
+            {
+                "Name": "xxx2.py",
+                "Size": "100kb",
+                "Functions":[
+                    {
+                        "name":"cal",
+                        "path":"../Temp/Function/xxx2_cal"
+                    }
+                ]
             }
         ]
     },
-    "BugOverview":{
-        "BugType":"Stack Overflow",
-        "Reason":"Directly take user input as eval's parameter.",
-        "Payload":"shutdown -h 0",
-        "Result":"shutdown",
-        "CallList":[
-                {
-                    "FuncName":"cal",
-                    "Line":123,
-                    "Statement":"eval(s)",
-                    "Called":"js",
-                    "Linecode":"...eval(s)...",
-                    "Funccode":null
-                },{
-                    "FuncName":"js",
-                    "Line":3,
-                    "Statement":"cal(s)",
-                    "Called":"main",
-                    "Linecode":"...cal(s)...",
-                    "Funccode":["...","...","...cal(s)...","..."]
-                },{
-                    "FuncName":"main",
-                    "Line":1,
-                    "Statement":"js(s)",
-                    "Called":null,
-                    "Linecode":"...js(s)...",
-                    "Funccode":["...js(s)..."]
-                }
-            ]
-        }
+    "CallList": {
+        "Function": [
+            {
+                "Name": "main()",
+                "from": "xxx1.py",
+                "Call": [
+                    "cal(s)",
+                    "js(s)"
+                ],
+                "Calledfrom": []
+            },
+            {
+                "Name": "js()",
+                "from": "xxx1.py",
+                "Call": [
+                    "cal(s)"
+                ],
+                "Calledfrom": [
+                    "main()"
+                ]
+            },
+            {
+                "Name": "cal()",
+                "from": "xxx2.py",
+                "Call": [],
+                "Calledfrom": [
+                    "main()",
+                    "js()"
+                ]
+            }
+        ]
+    },
+    "BugOverview": {
+        "BugDetected":"yes",
+        "BugType": "Stack Overflow",
+        "Payload": "shutdown -h 0",
+        "Result": "shutdown",
+        "CallList": [
+            {
+                "FuncName": "cal",
+                "from":"xxx2.py",
+                "Line": 123,
+                "Statement": "eval(s)",
+                "Called": "js"
+            },
+            {
+                "FuncName": "js",
+                "from":"xxx1.py",
+                "Line": 3,
+                "Statement": "cal(s)",
+                "Called": "main"
+            },
+            {
+                "FuncName": "main",
+                "from":"xxx1.py",
+                "Line": 1,
+                "Statement": "js(s)",
+                "Called": null
+            },
+            {
+                "FuncName":null,
+                "Line":233,
+                "Statement":"main()"
+            }
+        ]
     }
+}
