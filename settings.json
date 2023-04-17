@@ -1,4 +1,5 @@
 {
-	"DatabasePath" : "",
-	"ProjectPath" : ""
+	"DatabasePath" : "/home/tiger1218/dachuang/source2sinks/1.Shell_Exec/CVE-2022-36069/database",
+	"ProjectPath" : "/home/tiger1218/dachuang/source2sinks/1.Shell_Exec/CVE-2022-36069",
+	"WebServerPort" : 8000
 }
