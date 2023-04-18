@@ -1,29 +1,28 @@
 function upload() {
-  const input = document.getElementById('fileInput');
-  if (!input || !input.files || input.files.length === 0) {
-    alert('Please select a file!');
-    return;
+  var fileInput = document.getElementById("fileInput");
+  var files = fileInput.files;
+  var formData = new FormData();
+  for (var i = 0; i < files.length; i++) {
+      formData.append("file", files[i]);
   }
-  var name = "File name:";
-  if ('name' in input.files[0]) {
-    name += input.files[0].name;
-  }
-  var size = "File size:";
-  if ('size' in input.files[0]) {
-    size += input.files[0].size;
-  }
-  const reader = new FileReader();
-  reader.onload = function (event) {
-    const text = event.target.result;
-    const div = document.createElement('div');
-    div.textContent = text;
-    document.getElementById('showText').replaceChild(div, div);
-  };
-  reader.readAsText(input.files[0]);
-  document.getElementById('Filename').style.display = '';
-  document.getElementById('Filename').innerHTML = name;
-  document.getElementById('Filesize').style.display = '';
-  document.getElementById('Filesize').innerHTML = size + 'B';
+  var xhr = new XMLHttpRequest();
+  xhr.upload.addEventListener("progress", function (evt) {
+      if (evt.lengthComputable) {
+          var percentComplete = evt.loaded / evt.total;
+          percentComplete = parseInt(percentComplete * 100);
+          var progressBar = document.getElementById("progressBar");
+          progressBar.style.width = percentComplete + "%";
+          progressBar.innerHTML = percentComplete + "%";
+      }
+  }, false);
+  xhr.addEventListener("load", function () {
+      alert("上传完成！");
+  }, false);
+  xhr.addEventListener("error", function () {
+      alert("上传失败！");
+  }, false);
+  xhr.open("POST", "upload.php");
+  xhr.send(formData);
 }
 
 function loadJSON(callback) {

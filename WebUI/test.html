@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Upload Folder</title>
+</head>
+<body>
+<form action="upload.php" method="post" enctype="multipart/form-data">
+<label for="file">Select a folder:</label>
+<input type="file" id="file" name="file" webkitdirectory directory multiple>
+<br><br>
+<input type="submit" value="Upload">
+</form>
+
+<script>
+var fileInput = document.getElementById("file");
+
+fileInput.addEventListener("change", function(event) {
+var files = fileInput.files;
+console.log(files);
+});
+</script>
+
+</body>
+</html>
